@@ -108,9 +108,9 @@ with colC1:
     
 if graph_bt:
     if estacao_selected not in(['8069003', '8069004', '8168000', '8167000', '8167003']):
-        fig = plot_nivel(tmp_df, local_estacao.item())
+        fig = plot_nivel(tmp_df.query("NivelConsistencia == 1"), local_estacao.item())
     else:
-        fig = plot_chuva(tmp_df, local_estacao.item())
+        fig = plot_chuva(tmp_df.query("NivelConsistencia == 1"), local_estacao.item())
     st.pyplot(fig)
 with colC2:
     export_bt = st.download_button('Exportar_dado', download_file, 'Dados_fluvio.csv')
