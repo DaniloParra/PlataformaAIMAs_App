@@ -15,5 +15,5 @@ def plot_chuva(df, local):
     ax.set_title(f"Chuvas, {local}")
     ax.set_ylabel("Chuvas")
     ax.set_xlabel("Data")
-    ax.bar(df['Data'], df['Cotas'], color='green')
+    ax.bar(df['Data'], df['Cotas'], color='purple')
     return fig

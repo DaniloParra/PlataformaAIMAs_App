@@ -14,6 +14,7 @@ df['Data'] = pd.to_datetime(df['Data'])
 
 #Tabela de estações
 estacoes_df = pd.DataFrame([[ 'Manaus', 'Rio Negro', '14990000', "Fluvio"],
+                            [ 'Manaus', 'Rio Negro', '360000', "Pluvio"],
                            [ 'Santa Isabel', 'Rio Negro', "14400000", "Fluvio"],
                            ["São Gabriel da Cachoeira","Rio Negro", "14320001", "Fluvio"],
                            ["Barcelos", "Rio Negro", "14480002", "Fluvio"],
@@ -23,15 +24,15 @@ estacoes_df = pd.DataFrame([[ 'Manaus', 'Rio Negro', '14990000', "Fluvio"],
                            ['Taracuá','Uaupés','14280000','Fluvio'],
                            ['Taracuá', 'Uaupés', '14280001', "Fluvio"],
                            ['Pari Cachoeira','Tiquié','14300000','Fluvio'],
-                           #['Pari Cachoeira','Tiquié','8069003','Pluvio'],
-                           #['Pirarara Poço','Tiquié','8069004','Pluvio'],
+                           ['Pari Cachoeira','Tiquié','8069003','Pluvio'],
+                           ['Pirarara Poço','Tiquié','8069004','Pluvio'],
                            ['Cunuri','Tiquié','14310000','Fluvio'],
-                           #['Tunui','Içana','8168000','Pluvio'],
+                           ['Tunui','Içana','8168000','Pluvio'],
                            ['São Joaquim','Içana','14215000','Fluvio'],
                            ['Assunção','Içana','14230000','Fluvio'],
-                           #['Assunção','Içana','8167000','Pluvio'],
-                           ['Louro Poço','Içana','14220000','Fluvio']
-                           #['Santana','Içana','8167003','Pluvio']
+                           ['Assunção','Içana','8167000','Pluvio'],
+                            ['Louro Poço','Içana','14220000','Fluvio'],
+                           ['Santana','Içana','8167003','Pluvio']
                            ], columns=['Local', 'Rio', 'N°Estação', 'Tipo'])
 
 
@@ -108,16 +109,21 @@ with colC1:
     
 if graph_bt:
     # Cria uma coluna com a data correta e dropa os dias errados 
-    tmp_df["Data"] = pd.to_datetime(df[["Year", "Month", "Day"]], errors='coerce')
+    tmp_df["Data"] = pd.to_datetime(tmp_df[["Year", "Month", "Day"]], errors='coerce')
     tmp_df["Data"] = tmp_df["Data"].dt.date
+    tmp_df['Cotas'] = tmp_df['Cotas'].str.replace(",", ".").astype(float)
+    #tmp_df['Cotas'] = pd.to_numeric(df['Cotas'], errors='coerce')
 
-    if estacao_selected not in(['8069003', '8069004', '8168000', '8167000', '8167003']):
+    if estacao_selected not in(['8069003', '8069004', '8168000', '8167000','360000', '8167003']):
         fig = plot_nivel(tmp_df.query("NivelConsistencia == 1").sort_values("Data"),
                          local_estacao.item())
-        #st.write(tmp_df.query("NivelConsistencia == 1"))
+        st.pyplot(fig)
+        st.write(estacao_selected)
     else:
-        fig = plot_chuva(tmp_df.query("NivelConsistencia == 1"), local_estacao.item())
-    st.pyplot(fig)
+        fig = plot_chuva(tmp_df.query("NivelConsistencia == 1").sort_values("Data"), local_estacao.item())
+        st.pyplot(fig)
+        #st.write(tmp_df['Cotas'])
+        
 with colC2:
     export_bt = st.download_button('Exportar_dado', download_file, 'Dados_fluvio.csv')
 
