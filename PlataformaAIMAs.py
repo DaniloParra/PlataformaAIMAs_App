@@ -107,8 +107,14 @@ with colC1:
     fig, ax = plt.subplots()
     
 if graph_bt:
+    # Cria uma coluna com a data correta e dropa os dias errados 
+    tmp_df["Data"] = pd.to_datetime(df[["Year", "Month", "Day"]], errors='coerce')
+    tmp_df["Data"] = tmp_df["Data"].dt.date
+
     if estacao_selected not in(['8069003', '8069004', '8168000', '8167000', '8167003']):
-        fig = plot_nivel(tmp_df.query("NivelConsistencia == 1"), local_estacao.item())
+        fig = plot_nivel(tmp_df.query("NivelConsistencia == 1").sort_values("Data"),
+                         local_estacao.item())
+        #st.write(tmp_df.query("NivelConsistencia == 1"))
     else:
         fig = plot_chuva(tmp_df.query("NivelConsistencia == 1"), local_estacao.item())
     st.pyplot(fig)
